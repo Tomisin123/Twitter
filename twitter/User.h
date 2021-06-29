@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Create initializer
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
++ (NSMutableArray *)tweetsWithArray:(NSArray *)dictionaries;
 
 @end
 
