@@ -13,6 +13,7 @@
 #import "UIImageView+AFNetworking.h"
 
 #import "ComposeViewController.h"
+#import "DetailsViewController.h"
 
 //for logout method
 #import "AppDelegate.h"
@@ -23,6 +24,7 @@
 @property (nonatomic, strong) NSMutableArray *arrayOfTweets;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIRefreshControl *refreshControl;
+
 
 @end
 
@@ -105,10 +107,16 @@
     [cell.profilePicture setImageWithURL:url];
     
     cell.numLikes.text = [NSString stringWithFormat:@"%d", tweet.favoriteCount];
-    //cell.numReplies.text = [NSString stringWithFormat:@"@%d", tweet.];
+    //cell.numReplies.text = [NSString stringWithFormat:@"@%d", tweet.r];
     cell.numRetweets.text = [NSString stringWithFormat:@"%d", tweet.retweetCount];
     
+    [cell refreshData];
+    
     return cell;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [self viewDidLoad];
 }
 
 
@@ -118,11 +126,21 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    UINavigationController *navigationController = [segue destinationViewController];
-    ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
-    composeController.delegate = self;
+    
+    if ([segue.identifier isEqual:@"composeSegue"]){
+        UINavigationController *navigationController = [segue destinationViewController];
+        ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
+        composeController.delegate = self;
+    }
+    else{
+        //Details View Controller
+        UITableViewCell *tappedCell = sender;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
+        Tweet *tweet = self.arrayOfTweets[indexPath.row];
+        DetailsViewController *detailsViewController = [segue destinationViewController];
+        detailsViewController.tweet = tweet;
+    }
 }
-
 
 
 @end
